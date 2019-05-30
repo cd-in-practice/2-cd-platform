@@ -1,0 +1,81 @@
+version: '3.3'
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: JenkinsMasterDockerfile
+    image: jenkins-master:2.169
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASS=admin
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+
+    ports:
+      - "8080:8080"
+    volumes:
+      - ~/1-cd-platform-jenkins:/var/jenkins_home
+    restart: always
+    
+    networks: 
+      cd-in-practice: {}
+  jenkins-agent:
+    build:
+      context: .
+      dockerfile: JenkinsDockerSlaveDockerfile
+    image: jenkins-docker-swarm-agent:latest
+    restart: always
+    depends_on:
+      - jenkins
+    environment:
+      - JENKINS_MASTER_URL=http://jenkins:8080
+      - JENKINS_MASTER_USERNAME=admin
+      - JENKINS_MASTER_PASSWORD=admin
+      - JENKINS_SWARM_LABEL=docker
+
+    volumes:
+      - ~/1-cd-platform-jenkins-agent-home:/var/jenkins_home
+      - ~/1-cd-platform-jenkins-agent-home-m2:/root/.m2
+      - /var/run/docker.sock:/var/run/docker.sock
+    links:
+      - jenkins
+    networks: 
+      cd-in-practice: {}  
+  jenkins-agent-1:
+    build:
+      context: .
+      dockerfile: JenkinsDockerSlaveDockerfile
+    image: jenkins-docker-swarm-agent:latest
+    restart: always
+    depends_on:
+      - jenkins
+    environment:
+      - JENKINS_MASTER_URL=http://jenkins:8080
+      - JENKINS_MASTER_USERNAME=admin
+      - JENKINS_MASTER_PASSWORD=admin
+      - JENKINS_SWARM_LABEL=docker
+    volumes:
+      - ~/1-cd-platform-jenkins-agent-home-1:/var/jenkins_home
+      - ~/1-cd-platform-jenkins-agent-home-m2-1:/root/.m2
+      - /var/run/docker.sock:/var/run/docker.sock
+    links:
+      - jenkins 
+    
+    networks: 
+      cd-in-practice: {}
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-pro:6.0.0
+    ports:
+      - "8081:8081"
+    volumes:
+      - ~/jfrog/artifactory:/var/opt/jfrog/artifactory
+    networks: 
+      cd-in-practice: {}
+volumes:
+  db_data: {}
+
+networks:
+  cd-in-practice: {}
+        
+  

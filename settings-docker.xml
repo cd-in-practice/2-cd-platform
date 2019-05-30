@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <servers>
+    <server>
+      <!-- <username>${security.getCurrentUsername()}</username>
+      <password>${security.getEscapedEncryptedPassword()!"AP3W4YsgrvoZ5yS9ee7dUdfGn3"}</password> -->
+      <username>app</username>
+      <password>password</password>
+      <id>central</id>
+    </server>
+    <server>
+      <username>app</username>
+      <password>password</password>
+      <id>snapshots</id>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <repositories>
+        <repository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>public</name>
+          <url>http://artifactory:8081/artifactory/public</url>
+        </repository>
+        <repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>public</name>
+          <url>http://artifactory:8081/artifactory/public</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>public</name>
+          <url>http://artifactory:8081/artifactory/public</url>
+        </pluginRepository>
+        <pluginRepository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>public</name>
+          <url>http://artifactory:8081/artifactory/public</url>
+        </pluginRepository>
+        <pluginRepository>
+          <id>apache.snapshots</id>
+          <url>http://repository.apache.org/snapshots/</url>
+        </pluginRepository>
+      </pluginRepositories>
+      <id>artifactory</id>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>artifactory</activeProfile>
+  </activeProfiles>
+</settings>
